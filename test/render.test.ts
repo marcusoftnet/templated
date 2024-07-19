@@ -95,3 +95,18 @@ test("renders includes to include other templates", () => {
   expect(result).toContain("<h1>The layout</h1>");
   expect(result).toContain("<h2>Main content</h2>");
 });
+
+test("calls user defined functions passed to the template", () => {
+  const templatePath = path.resolve(
+    __dirname,
+    "fixtures",
+    "callingUserDefinedFunctions.html"
+  );
+  const result = render(templatePath, {
+    people,
+    myFunction: (length: number, greeting: string) => `Length was ${length} - ${greeting}`,
+  });
+  expect(result).toContain(
+    `The result of the function call is "<code>Length was ${people.length} - Yee-Haw</code>"`
+  );
+});

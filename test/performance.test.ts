@@ -62,7 +62,7 @@ test("performance test for rendering large template - single", () => {
     length: rows,
   });
   console.log(
-    `Rendering a template with ${rows} took ${renderTime.toFixed(2)} ms`
+    `Rendering one template with ${rows} rows took ${renderTime.toFixed(2)} ms`
   );
   expect(renderTime).toBeLessThan(20);
 });
