@@ -56,7 +56,14 @@ export const render = (
   data: Record<string, any>,
   templatePath: string = ""
 ): string => {
-  return renderTemplateContent(templateContent, data, templatePath);
+  try {
+    return renderTemplateContent(templateContent, data, templatePath);
+  } catch (error) {
+    if (error instanceof TemplateRenderError)
+      return (error as TemplateRenderError).message;
+
+    throw error;
+  }
 };
 
 export const renderTemplateFile = (
@@ -76,40 +83,3 @@ export const renderTemplateFile = (
     throw error;
   }
 };
-// export const renderTemplateFile = (
-//   templatePath: string,
-//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//   data: Record<string, any>
-// ): string => {
-//   const absolutePath = path.resolve(templatePath);
-
-//   let template: string = "";
-
-//   if (templateCache[absolutePath]) {
-//     template = templateCache[absolutePath];
-//   } else {
-//     try {
-//       template = fs.readFileSync(absolutePath, "utf-8");
-//       templateCache[absolutePath] = template;
-//     } catch (err) {
-//       return createFileNotFoundMessage(absolutePath, err as Error);
-//     }
-//   }
-//   const include = (includePath: string) =>
-//     renderTemplateFile(includePath, data);
-//   const sandbox = { ...data, include };
-//   const context = vm.createContext(sandbox);
-
-//   const scriptContent = `\`${template}\``;
-//   const script = new vm.Script(scriptContent);
-
-//   try {
-//     return script.runInContext(context);
-//   } catch (err) {
-//     return renderTemplateFileFailureMessage(
-//       templatePath,
-//       template,
-//       err as Error
-//     );
-//   }
-// };

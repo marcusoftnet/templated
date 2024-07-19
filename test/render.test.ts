@@ -1,5 +1,5 @@
 import { describe } from "node:test";
-import { renderTemplateFile, render } from "../src/render";
+import { renderTemplateFile, render } from "../src";
 import * as path from "path";
 
 const fixturePath = (filePath: string) =>
@@ -151,7 +151,7 @@ ${expectedLiPeopleString}`);
 });
 
 describe("error handling", () => {
-  test("writes a nice error message when template is not found", () => {
+  test("writes a nice error message when template file is not found", () => {
     const templatePath = fixturePath("notFound.html");
     const result = renderTemplateFile(templatePath, {});
     expect(result).toContain(`could not be found.`);
@@ -161,10 +161,18 @@ describe("error handling", () => {
     expect(result).toContain(`Error message:`);
   });
 
-  test("writes a nice error message when template fails to render", () => {
+  test("writes a nice error message when template file fails to render", () => {
     const templatePath = fixturePath("failingRendering.html");
     const result = renderTemplateFile(templatePath, {}); // Not passing people that the template is using
     expect(result).toContain(`"${templatePath}"`);
+    expect(result).toContain("Error message:  people is not defined");
+    expect(result).toContain("${people.map(p => p.id)}");
+    expect(result).toContain("Error code:");
+  });
+
+  test("writes a nice error message when template fails to render", () => {
+    const result = render("${people.map(p => p.id)}", {}, "No file"); // Not passing people that the template is using
+    expect(result).toContain("No file");
     expect(result).toContain("Error message:  people is not defined");
     expect(result).toContain("${people.map(p => p.id)}");
     expect(result).toContain("Error code:");

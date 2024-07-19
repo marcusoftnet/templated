@@ -1,4 +1,4 @@
-import { render } from "../src/render";
+import { render } from "../src";
 import * as path from "path";
 import { performance } from "perf_hooks";
 
