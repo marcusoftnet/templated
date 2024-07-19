@@ -1,0 +1,24 @@
+{
+  "name": "literal-view-engine",
+  "version": "1.0.0",
+  "description": "A string template literal based view engine",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.7.0",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.14.10",
+    "@typescript-eslint/eslint-plugin": "^7.16.1",
+    "@typescript-eslint/parser": "^7.16.1",
+    "eslint": "^9.7.0",
+    "globals": "^15.8.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.2",
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^7.16.1"
+  }
+}
