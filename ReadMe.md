@@ -1,6 +1,6 @@
 # Templated - JavaScript template strings as a view engine
 
-Templated is a lightweight and flexible view engine for JavaScript, leveraging template strings for dynamic content generation. Designed with TypeScript, it supports rendering HTML templates with embedded JavaScript.
+Templated is a lightweight and flexible view engine for JavaScript, leveraging template strings for dynamic content generation. Designed with TypeScript, it supports rendering templates, of any type, with embedded JavaScript.
 
 ## Table of Contents
 
@@ -8,7 +8,7 @@ Templated is a lightweight and flexible view engine for JavaScript, leveraging t
 - [Installation](#installation)
 - [Usage](#usage)
   - [Basic Example](#basic-example)
-  - [Including Templates](#including-templates)
+  - [Include templates in templates](#include-templates-in-templates)
 - [Performance](#performance)
 - [Development](#development)
   - [Testing](#testing)
@@ -81,7 +81,7 @@ console.log(result)
 
 This code example is found in [basic.ts](/usageCodeExamples/basic.ts) and can be run with `npx ts-node usageCodeExamples/basic.ts`
 
-### Rendering templates in templates
+### Include templates in templates
 
 You can include and render other templates as part of the rendering of a template. This can be useful to have reusable layout elements, such as footers and headers.
 

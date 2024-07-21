@@ -1,7 +1,7 @@
 {
   "name": "templated",
   "version": "1.0.0",
-  "description": "The Templated view engine is a super simple, pure JavaScript view engines with few dependencies and using a syntax known to all JavaScript devs",
+  "description": "Templated is a lightweight and flexible view engine for JavaScript, leveraging template strings for dynamic content generation. Designed with TypeScript, it supports rendering templates, of any type, with embedded JavaScript.",
   "scripts": {
     "clean": "rimraf dist",
     "test": "jest",
