@@ -1,4 +1,4 @@
-import * as path from "path";
+import { basename } from "path";
 
 export class TemplateRenderError extends Error {
   templateContent: string;
@@ -14,7 +14,7 @@ export class TemplateRenderError extends Error {
       Error message:  ${err.message}
       Error code:     ${err.name}
 
-      ${path.basename(templateFilePath)}:
+      ${basename(templateFilePath)}:
       =======
       ${templateContent}
       =======
@@ -47,7 +47,7 @@ export class TemplateNotFoundError extends Error {
   cause: Error;
 
   templateFileNotFoundMessage = (absolutePath: string, err: Error) =>
-    `The "${path.basename(absolutePath)}" file could not be found.
+    `The "${basename(absolutePath)}" file could not be found.
       Resolved path:  ${absolutePath}
 
       Error message:  ${err.message}
