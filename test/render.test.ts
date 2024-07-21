@@ -15,10 +15,10 @@ const people = [
 
 const expectedLiPeopleString = `<ul>
   <li>Marcus</li>
-<li>Elin</li>
-<li>Albert</li>
-<li>Arvid</li>
-<li>Gustav</li>
+  <li>Elin</li>
+  <li>Albert</li>
+  <li>Arvid</li>
+  <li>Gustav</li>
 </ul>`;
 
 describe("using template files", () => {
@@ -47,10 +47,10 @@ describe("using template files", () => {
     });
     expect(result).toBe(`<ol>
   <li>1</li>
-<li>2</li>
-<li>3</li>
-<li>4</li>
-<li>5</li>
+  <li>2</li>
+  <li>3</li>
+  <li>4</li>
+  <li>5</li>
 </ol>`);
   });
 
@@ -97,10 +97,10 @@ describe("using template files", () => {
       "fixtures",
       "includeMain.html"
     );
-    const result = renderTemplateFile(templatePath, { people });
-    expect(result).toContain("<h1>Main content</h1>");
-    expect(result).toContain("<h2>Header</h2>");
-    expect(result).toContain("<h2>Footer</h2>");
+    const result = renderTemplateFile(templatePath, { appName: "MyApp" });
+    expect(result).toContain("<h1>Main content for MyApp</h1>");
+    expect(result).toContain("<h2>Header for MyApp</h2>");
+    expect(result).toContain("<h2>Footer for MyApp</h2>");
   })
 
   test("calls user defined functions passed to the template", () => {
@@ -136,7 +136,7 @@ describe("rendering templates", () => {
   test("renders template with loop", () => {
     const result = render(
       `<ul>
-  ${people.map((p) => `<li>${p.name}</li>`).join("\n")}
+  ${people.map((p) => `<li>${p.name}</li>`).join("\n  ")}
 </ul>`,
       { people }
     );
