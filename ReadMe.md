@@ -1,6 +1,6 @@
-# Templated - JavaScript template strings as a view engine
+# Templated-views - JavaScript template strings as a view engine
 
-Templated is a lightweight and flexible view engine for JavaScript, leveraging template strings for dynamic content generation. Designed with TypeScript, it supports rendering templates, of any type, with embedded JavaScript.
+Templated-views is a lightweight and flexible view engine for JavaScript, leveraging template strings for dynamic content generation. Designed with TypeScript, it supports rendering templates, of any type, with embedded JavaScript.
 
 ## Table of Contents
 
@@ -26,15 +26,15 @@ Templated is a lightweight and flexible view engine for JavaScript, leveraging t
 
 ## Installation
 
-You can install templated via npm:
+You can install Templated-views via npm:
 
 ```bash
-npm install templated
+npm install templated-views
 ```
 
 ## Usage
 
-Templated is just [JavaScript template strings](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals), that you can mix with any other text.
+Templated-views is just [JavaScript template strings](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals), that you can mix with any other text.
 
 Anything that you can do in a template string literal can be put in a file and be used as a template.
 
