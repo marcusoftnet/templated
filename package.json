@@ -2,12 +2,16 @@
   "name": "templated",
   "version": "1.0.0",
   "description": "Templated is a lightweight and flexible view engine for JavaScript, leveraging template strings for dynamic content generation. Designed with TypeScript, it supports rendering templates, of any type, with embedded JavaScript.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "clean": "rimraf dist",
     "test": "jest",
-    "build": "npm run clean && tsc -p tsconfig.build.json && npm run minify",
-    "minify": "terser dist/*.js --compress --mangle --output dist/templated.js",
-    "postminify": "rm dist/errors.js dist/index.js"
+    "clean": "rimraf build && rimraf dist --preserve-root",
+    "prebuild": "npm run clean",
+    "build": "tsc && npm run minify",
+    "preminify": "mkdir dist",
+    "minify": "terser build/index.js --compress --source-map --mangle --output dist/index.js",
+    "postminify": "cp build/index.d.ts dist/index.d.ts"
   },
   "keywords": [
     "template",
