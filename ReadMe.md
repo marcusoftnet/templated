@@ -55,7 +55,7 @@ Create a HTML-file `people.html` that holds the HTML and map over the people lik
 Then call the `renderTemplateFile` function like this:
 
 ```typescript
-import { renderTemplateFile } from templated;
+import { renderTemplateFile } from templated-views;
 
 const people = [
   { name: "Marcus" },
@@ -66,7 +66,7 @@ const people = [
 ];
 
 // renderTemplateFile(templatePath, data)
-const result = renderTemplateFile("usageCodeExamples/people.html", { people });
+const result = renderTemplateFile("usage/people.html", { people });
 console.log(result)
 /*
 <ul>
@@ -79,7 +79,7 @@ console.log(result)
 */
 ```
 
-This code example is found in [basic.ts](/usageCodeExamples/basic.ts) and can be run with `npx ts-node usageCodeExamples/basic.ts`
+This code example is found in [basic.ts](/usage/basic.ts) and can be run with `npx ts-node usage/basic.ts`
 
 ### Include templates in templates
 
@@ -110,8 +110,9 @@ ${include("footer.html")}
 You can now render the `main.html` like this:
 
 ```javascript
-import { renderTemplateFile } from "../src/index";
-const result = renderTemplateFile("usageCodeExamples/main.html", { appName: "MyApp" });
+import { renderTemplateFile } from templated-views;
+
+const result = renderTemplateFile("usage/main.html", { appName: "MyApp" });
 console.log(result);
 /*
 <h2>Header for MyApp</h2>
@@ -120,7 +121,7 @@ console.log(result);
 */
 ```
 
-This code example is found in [include.ts](/usageCodeExamples/include.ts) and can be run with `npx ts-node usageCodeExamples/include.ts`
+This code example is found in [include.ts](/usage/include.ts) and can be run with `npx ts-node usage/include.ts`
 
 ## Performance
 
@@ -156,7 +157,7 @@ npm run build
 
 ### Contributing
 
-I welcome contributions to Templated! Whether it's fixing bugs, adding new features, or improving documentation, your help is appreciated. Follow these simple steps to contribute:
+I welcome contributions to Templated-views! Whether it's fixing bugs, adding new features, or improving documentation, your help is appreciated. Follow these simple steps to contribute:
 
 1. **Fork the Repository**
 
@@ -229,7 +230,7 @@ If you have any questions or need assistance, feel free to open an issue or cont
 
 ---
 
-By following these steps, you can easily contribute to the development of Templated. Thank you for your help!
+By following these steps, you can easily contribute to the development of Templated-views. Thank you for your help!
 
 ## License
 

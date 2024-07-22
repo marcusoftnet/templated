@@ -1,11 +1,13 @@
 {
   "name": "templated-views",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Templated-views is a lightweight and flexible view engine for JavaScript, leveraging template strings for dynamic content generation. Designed with TypeScript, it supports rendering templates, of any type, with embedded JavaScript.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "test": "jest",
+    "test:usage": "npx ts-node usage/basic.ts && npx ts-node usage/include.ts",
+    "posttest:usage": "echo 'Usages ran without errors'",
     "clean": "rimraf build && rimraf dist --preserve-root",
     "prebuild": "npm run clean",
     "build": "tsc && npm run minify",
