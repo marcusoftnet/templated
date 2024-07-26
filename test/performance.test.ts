@@ -12,7 +12,7 @@ describe("Performance testing", () => {
     const start = performance.now();
 
     for (let i = 0; i < iterations; i++) {
-      render(templatePath, data);
+      render({templatePath, data});
     }
 
     const end = performance.now();
@@ -25,7 +25,7 @@ describe("Performance testing", () => {
     data: Record<string, any>
   ): number => {
     const start = performance.now();
-    render(templatePath, data);
+    render({templatePath, data});
 
     const end = performance.now();
     return end - start;

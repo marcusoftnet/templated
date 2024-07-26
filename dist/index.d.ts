@@ -1,5 +1,9 @@
-export declare const render: (templateContent: string, data: Record<string, any>, templatePath?: string) => string;
-export declare const renderTemplateFile: (templatePath: string, data: Record<string, any>) => string;
+export declare const render: (params: RenderParams) => string;
+export interface RenderParams {
+    templatePath?: string;
+    templateContent?: string;
+    data: Record<string, any>;
+}
 export declare class TemplateRenderError extends Error {
     templateContent: string;
     templatePath: string;
@@ -8,7 +12,7 @@ export declare class TemplateRenderError extends Error {
     renderTemplateFailureMessage: (templateFilePath: string, templateContent: string, err: Error) => string;
     constructor({ templateContent, templatePath, cause, }: {
         templateContent: string;
-        templatePath: string;
+        templatePath?: string;
         cause: Error;
     });
 }

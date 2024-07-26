@@ -38,7 +38,43 @@ Templated-views is just [JavaScript template strings](https://developer.mozilla.
 
 Anything that you can do in a template string literal can be put in a file and be used as a template.
 
-You can find many examples in [our tests](./test/render.test.ts)
+You can find many more examples in [our tests](./test/render.test.ts)
+
+### Print with `${}`
+
+Printing a value is done with JavaScript template syntax, for example evaluating this block will render a string:
+
+```javascript
+<h1>{"A string that will be generated"}</h1>
+```
+
+If you have a variable you can use the `${}` syntax.
+
+```javascript
+// If data contains { name: "Marcus"}
+<h1>${name}</h1>
+// will print "<h1>Marcus</h1>
+```
+
+### Loop with `.map`
+
+Looping is best done with the `.map` method on JavaScript arrays
+
+```html
+<ul>
+  ${people.map(p => `
+  <li>${p.name}</li>
+  `).join("\n ") }
+</ul>
+```
+
+### Conditionals with the ternary operator
+
+You can do conditionals on one line using the JavaScript ternary operator
+
+```html
+<div>${name} is <strong>${age > 50 ? "OLD" : "younger"}</strong></div>
+```
 
 ### Basic Example
 
@@ -48,14 +84,20 @@ Create a HTML-file `people.html` that holds the HTML and map over the people lik
 
 ```html
 <ul>
-  ${people.map(p => `<li>${p.name}</li>`).join("\n  ") }
+  ${people.map(p => `
+  <li>${p.name}</li>
+  `).join("\n ") }
 </ul>
 ```
 
 Then call the `renderTemplateFile` function like this:
 
 ```typescript
-import { renderTemplateFile } from templated-views;
+import { render } from "templated-views";
+// the above line is just for me to use the implementation to verify the usage
+// in your code write
+// import { render } from "templated-views";
+// after installing the package with 'npm i templated-views'
 
 const people = [
   { name: "Marcus" },
@@ -65,9 +107,11 @@ const people = [
   { name: "Gustav" },
 ];
 
-// renderTemplateFile(templatePath, data)
-const result = renderTemplateFile("usage/people.html", { people });
-console.log(result)
+const result = render({
+  templatePath: "usage/people.html",
+  data: { people },
+});
+console.log(result);
 /*
 <ul>
   <li>Marcus</li>
@@ -110,10 +154,13 @@ ${include("footer.html")}
 You can now render the `main.html` like this:
 
 ```javascript
-import { renderTemplateFile } from templated-views;
-
-const result = renderTemplateFile("usage/main.html", { appName: "MyApp" });
+import { render } from "templated-views";
+const result = render({
+  templatePath: "usage/main.html",
+  data: { appName: "MyApp" },
+});
 console.log(result);
+
 /*
 <h2>Header for MyApp</h2>
 <h1>Main content for MyApp</h1>

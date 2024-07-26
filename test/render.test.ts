@@ -1,5 +1,5 @@
 import { describe } from "node:test";
-import { renderTemplateFile, render } from "../src";
+import { render } from "../src";
 import * as path from "path";
 
 const fixturePath = (filePath: string) =>
@@ -24,27 +24,26 @@ const expectedLiPeopleString = `<ul>
 describe("using template files", () => {
   test("renders template without data", () => {
     const templatePath = fixturePath("simpleWithoutData.html");
-    const result = renderTemplateFile(templatePath, {});
+    const result = render({ templatePath, data: {} });
     expect(result).toBe("<div>No data here</div>");
   });
 
   test("renders template with data", () => {
     const templatePath = fixturePath("simpleWithData.html");
-    const result = renderTemplateFile(templatePath, { name: "Marcus" });
+    const result = render({ templatePath, data: { name: "Marcus" } });
     expect(result).toBe("<div>MARCUS</div>");
   });
 
   test("renders other than html", () => {
     const templatePath = fixturePath("simpleWithData.txt");
-    const result = renderTemplateFile(templatePath, { name: "Marcus" });
+    const result = render({ templatePath, data: { name: "Marcus" } });
     expect(result).toBe("MARCUS wrote this");
   });
 
   test("renders simple loops", () => {
     const templatePath = fixturePath("loopSimple.html");
-    const result = renderTemplateFile(templatePath, {
-      numbers: [1, 2, 3, 4, 5],
-    });
+    const numbers = [1, 2, 3, 4, 5];
+    const result = render({ templatePath, data: { numbers } });
     expect(result).toBe(`<ol>
   <li>1</li>
   <li>2</li>
@@ -56,25 +55,21 @@ describe("using template files", () => {
 
   test("renders loops with objects", () => {
     const templatePath = fixturePath("loopObjects.html");
-    const result = renderTemplateFile(templatePath, { people });
+    const result = render({ templatePath, data: { people } });
     expect(result).toBe(expectedLiPeopleString);
   });
 
   test("renders conditionals true branch", () => {
     const templatePath = fixturePath("conditional.html");
-    const result = renderTemplateFile(templatePath, {
-      name: "Marcus",
-      age: 52,
-    });
+    const data = { name: "Marcus", age: 52 };
+    const result = render({ templatePath, data });
     expect(result).toBe("<div>Marcus is <strong>OLD</strong></div>");
   });
 
   test("renders conditionals false branch", () => {
     const templatePath = fixturePath("conditional.html");
-    const result = renderTemplateFile(templatePath, {
-      name: "Majken",
-      age: 12,
-    });
+    const data = { name: "Majken", age: 12 };
+    const result = render({ templatePath, data });
     expect(result).toBe("<div>Majken is <strong>younger</strong></div>");
   });
 
@@ -84,7 +79,7 @@ describe("using template files", () => {
       "fixtures",
       "includeHead.html"
     );
-    const result = renderTemplateFile(templatePath, { people });
+    const result = render({ templatePath, data: { people } });
     expect(result).toContain(expectedLiPeopleString);
     expect(result).toContain("<!DOCTYPE html>");
     expect(result).toContain("<h1>The layout</h1>");
@@ -97,11 +92,12 @@ describe("using template files", () => {
       "fixtures",
       "includeMain.html"
     );
-    const result = renderTemplateFile(templatePath, { appName: "MyApp" });
+    const data = { appName: "MyApp" };
+    const result = render({ templatePath, data });
     expect(result).toContain("<h1>Main content for MyApp</h1>");
     expect(result).toContain("<h2>Header for MyApp</h2>");
     expect(result).toContain("<h2>Footer for MyApp</h2>");
-  })
+  });
 
   test("calls user defined functions passed to the template", () => {
     const templatePath = path.resolve(
@@ -109,10 +105,14 @@ describe("using template files", () => {
       "fixtures",
       "callingUserDefinedFunctions.html"
     );
-    const result = renderTemplateFile(templatePath, {
-      people,
-      myFunction: (length: number, greeting: string) =>
-        `Length was ${length} - ${greeting}`,
+
+    const result = render({
+      templatePath,
+      data: {
+        people,
+        myFunction: (length: number, greeting: string) =>
+          `Length was ${length} - ${greeting}`,
+      },
     });
     expect(result).toContain(
       `The result of the function call is "<code>Length was ${people.length} - Yee-Haw</code>"`
@@ -120,31 +120,45 @@ describe("using template files", () => {
   });
 });
 
-describe("rendering templates", () => {
+describe("rendering template content", () => {
+  test("renders template content when content is set", () => {
+    const result = render({
+      templateContent: "<div>No data here</div>",
+      data: {},
+    });
+    expect(result).toBe("<div>No data here</div>");
+  });
   test("renders template with no data", () => {
-    const result = render("<div>No data here</div>", {});
+    const result = render({
+      templateContent: "<div>No data here</div>",
+      data: {},
+    });
     expect(result).toBe("<div>No data here</div>");
   });
 
   test("renders template with data", () => {
-    const result = render("<div>${name.toUpperCase()} wrote this</div>", {
-      name: "Marcus",
+    const data = { name: "Marcus" };
+    const result = render({
+      templateContent: "<div>${name.toUpperCase()} wrote this</div>",
+      data,
     });
     expect(result).toBe("<div>MARCUS wrote this</div>");
   });
 
   test("renders template with loop", () => {
-    const result = render(
-      `<ul>
+    const templateContent = `<ul>
   ${people.map((p) => `<li>${p.name}</li>`).join("\n  ")}
-</ul>`,
-      { people }
-    );
+</ul>`;
+    const data = { people };
+    const result = render({ templateContent, data });
     expect(result).toBe(expectedLiPeopleString);
   });
 
   test("renders template with included file", () => {
-    const result = render('<h1>The layout</h1>\n\t${include("test/fixtures/includeBody.html")}', { people });
+    const templateContent =
+      '<h1>The layout</h1>\n\t${include("test/fixtures/includeBody.html")}';
+    const data = { people };
+    const result = render({ templateContent, data });
     expect(result).toBe(`<h1>The layout</h1>\n\t<h2>Main content</h2>
 ${expectedLiPeopleString}`);
   });
@@ -153,7 +167,7 @@ ${expectedLiPeopleString}`);
 describe("error handling", () => {
   test("writes a nice error message when template file is not found", () => {
     const templatePath = fixturePath("notFound.html");
-    const result = renderTemplateFile(templatePath, {});
+    const result = render({ templatePath, data: {} });
     expect(result).toContain(`could not be found.`);
     expect(result).toContain("notFound.html");
     expect(result).toContain(templatePath);
@@ -163,7 +177,7 @@ describe("error handling", () => {
 
   test("writes a nice error message when template file fails to render", () => {
     const templatePath = fixturePath("failingRendering.html");
-    const result = renderTemplateFile(templatePath, {}); // Not passing people that the template is using
+    const result = render({ templatePath, data: {} }); // Not passing people that the template is using
     expect(result).toContain(`"${templatePath}"`);
     expect(result).toContain("Error message:  people is not defined");
     expect(result).toContain("${people.map(p => p.id)}");
@@ -171,7 +185,11 @@ describe("error handling", () => {
   });
 
   test("writes a nice error message when template fails to render", () => {
-    const result = render("${people.map(p => p.id)}", {}, "No file"); // Not passing people that the template is using
+    const result = render({
+      templateContent: "${people.map(p => p.id)}",
+      templatePath: "No file",
+      data: {},
+    }); // Not passing people that the template is using
     expect(result).toContain("No file");
     expect(result).toContain("Error message:  people is not defined");
     expect(result).toContain("${people.map(p => p.id)}");

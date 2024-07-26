@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as fs from "fs";
-import { basename, resolve }from "path";
+import { basename, resolve } from "path";
 import * as vm from "vm";
 
 const templateCache: Record<string, string> = {};
 
 const createSandbox = (data: Record<string, any>) => ({
   ...data,
-  include: (templatePath: string) => renderTemplateFile(templatePath, data),
+  include: (templatePath: string) => render({templatePath, data}),
 });
 
-const loadTemplateFromFile = (templatePath: string): string => {
-  const absolutePath = resolve(templatePath);
+const loadTemplateFromFile = (templatePath?: string): string => {
+  const absolutePath = resolve(templatePath ?? "Template path was null");
   let template: string = "";
 
   if (templateCache[absolutePath]) {
@@ -30,48 +30,30 @@ const loadTemplateFromFile = (templatePath: string): string => {
   return template;
 };
 
-const renderTemplateContent = (
-  templateContent: string,
-  data: Record<string, any>,
-  templatePath: string = ""
-): string => {
-  const scriptContent = `\`${templateContent}\``;
+const renderTemplateContent = (params: RenderParams): string => {
+  const scriptContent = `\`${params.templateContent}\``;
   const script = new vm.Script(scriptContent);
 
   try {
-    const context = vm.createContext(createSandbox(data));
+    const context = vm.createContext(createSandbox(params.data));
     return script.runInContext(context);
   } catch (err) {
     throw new TemplateRenderError({
-      templateContent: templateContent,
-      templatePath: templatePath,
+      templateContent: params.templateContent ?? "No content",
+      templatePath: params.templatePath,
       cause: err as Error,
     });
   }
 };
 
-export const render = (
-  templateContent: string,
-  data: Record<string, any>,
-  templatePath: string = ""
-): string => {
-  try {
-    return renderTemplateContent(templateContent, data, templatePath);
-  } catch (error) {
-    if (error instanceof TemplateRenderError)
-      return (error as TemplateRenderError).message;
 
-    throw error;
-  }
-};
-
-export const renderTemplateFile = (
-  templatePath: string,
-  data: Record<string, any>
-): string => {
+export const render = (params: RenderParams): string => {
   try {
-    const templateContent = loadTemplateFromFile(templatePath);
-    return renderTemplateContent(templateContent, data, templatePath);
+    params.templateContent = params.templateContent
+      ? params.templateContent
+      : loadTemplateFromFile(params.templatePath);
+
+    return renderTemplateContent(params);
   } catch (error) {
     if (error instanceof TemplateNotFoundError)
       return (error as TemplateNotFoundError).message;
@@ -83,6 +65,12 @@ export const renderTemplateFile = (
   }
 };
 
+
+export interface RenderParams {
+  templatePath?: string;
+  templateContent?: string;
+  data: Record<string, any>;
+}
 
 export class TemplateRenderError extends Error {
   templateContent: string;
@@ -110,14 +98,14 @@ export class TemplateRenderError extends Error {
     cause,
   }: {
     templateContent: string;
-    templatePath: string;
+    templatePath?: string;
     cause: Error;
   }) {
     super();
     this.templateContent = templateContent;
     this.templatePath = templateContent;
     this.message = this.renderTemplateFailureMessage(
-      templatePath,
+      templatePath ?? "",
       templateContent,
       cause as Error
     );
